@@ -35,7 +35,7 @@ def main():
 
     file_prefix = os.path.join(config['directory'], _NAME)
     _log.info('File prefix is %s', file_prefix)
-    _fwrite(file_prefix, 'Start\n')
+    _fwrite(file_prefix, 'Started')
 
     while True:
         try:
@@ -75,7 +75,7 @@ def _run(host, port, tls, nick, password, channels, file_prefix, max_files):
                 _log.info(
                     '>> sender: %s; command: %s; middle: %s; trailing: %s',
                     sender, command, middle, trailing)
-                text = f'{sender} {command} {middle} :{trailing}\n'
+                text = f'{sender} {command} {middle} :{trailing}'
                 _fwrite(file_prefix, text)
             _ctx.retry_delay = 1
         if time.time() - _ctx.last_upkeep_time >= 3600:
@@ -85,13 +85,15 @@ def _run(host, port, tls, nick, password, channels, file_prefix, max_files):
 
 def _fwrite(file_prefix, text):
     """Write content to file and close the file."""
-    date = datetime.datetime.utcnow().strftime('%Y-%m-%d')
+    current_time = datetime.datetime.now(datetime.timezone.utc)
+    date = current_time.strftime('%Y-%m-%d')
+    time = current_time.strftime('%H:%M:%S')
     filename = f'{file_prefix}-{date}.txt'
     basedir = os.path.dirname(filename)
     if not os.path.isdir(basedir):
         os.makedirs(basedir)
     with open(filename, 'a', encoding='utf-8') as stream:
-        stream.write(text)
+        stream.write(f'{date} {time} {text}\n')
 
 
 def _upkeep(file_prefix, max_files):

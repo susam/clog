@@ -37,7 +37,7 @@ Note that this is not a typical channel logger that formats the
 messages beautifully.  This picks the JOIN, PART, QUIT, and PRIVMSG
 payloads and logs almost the raw payloads with very minor
 preprocessing.  The preprocessing step performs minor clean up on the
-nick names.
+nick names.  All timestamps are recorded in UTC.
 
 
 License
