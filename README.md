@@ -14,7 +14,7 @@ the following in the current directory:
   "nick": "...",
   "password": "...",
   "channels": ["#foo", "#bar"],
-  "file_prefix": "/tmp/clog",
+  "directory": "/tmp/clog/",
   "max_files": 90
 }
 ```
@@ -29,9 +29,15 @@ python3 clog.py
 ```
 
 With the above example configuration, the channel logs are written to
-files named in the format `/tmp/clog-YYYY-MM-DD.txt` where
+files named in the format `/tmp/clog/clog-YYYY-MM-DD.txt` where
 `YYYY-MM-DD` represents the current date.  All channel logs from all
 channels are written to the same file.
+
+Note that this is not a typical channel logger that formats the
+messages beautifully.  This picks the JOIN, PART, QUIT, and PRIVMSG
+payloads and logs almost the raw payloads with very minor
+preprocessing.  The preprocessing step performs minor clean up on the
+nick names.
 
 
 License

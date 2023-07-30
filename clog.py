@@ -33,11 +33,15 @@ def main():
     with open(f'{_NAME}.json', encoding='utf-8') as stream:
         config = json.load(stream)
 
+    file_prefix = os.path.join(config['directory'], _NAME)
+    _log.info('File prefix is %s', file_prefix)
+    _fwrite(file_prefix, 'Start\n')
+
     while True:
         try:
             _run(config['host'], config['port'], config['tls'],
                  config['nick'], config['password'], config['channels'],
-                 config['file_prefix'], config['max_files'])
+                 file_prefix, config['max_files'])
         except Exception:
             _log.exception('Client encountered error')
             _log.info('Reconnecting in %d s', _ctx.retry_delay)
