@@ -19,6 +19,9 @@ the following in the current directory:
 }
 ```
 
+The occurrences of triple-dots (`...`) in the above example represent
+placeholders that need to be replaced with actual credentials.
+
 Then run the following command:
 
 ```sh
