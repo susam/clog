@@ -1,0 +1,13 @@
+[Unit]
+Description=Clog
+After=network.target
+
+[Service]
+User=clog
+WorkingDirectory=/opt/clog
+ExecStart=/usr/bin/python3 clog.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
