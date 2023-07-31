@@ -4,6 +4,7 @@ help:
 	@echo 'Development Targets:'
 	@echo '  venv      Create virtual Python environment for development.'
 	@echo '  checks    Run linters and tests.'
+	@echo '  pull      Pull data from remote server.'
 	@echo
 	@echo 'Deployment Targets:'
 	@echo '  service   Remove, install, configure, and run app.'
@@ -46,6 +47,18 @@ clean:
 	rm -rf *.pyc __pycache__
 	rm -rf .coverage htmlcov
 	rm -rf dist clog.egg-info
+
+pull:
+	@echo remote: $(remote)
+	[ -n "$(remote)" ]
+	ssh "$(remote)" "tar -czf - -C /opt/data/ clog/" > /tmp/clog.tgz
+	rm -rf clog/
+	tar -xvf /tmp/clog.tgz
+	du -sh /tmp/clog.tgz clog/
+
+cat:
+	cat clog/*.txt | wc -l
+	sed -n 's/\(.\{19\}\) \(.*\) PRIVMSG \(.*\) :\(.*\)/\1 \3 <\2> \4/p' clog/*.txt
 
 
 # Deployment Targets
