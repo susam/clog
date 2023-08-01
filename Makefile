@@ -15,28 +15,29 @@ help:
 # Development Targets
 # -------------------
 
+VENV = $(HOME)/.venv/clog
+BIN = $(VENV)/bin
+
 rmvenv:
-	rm -rf ~/.venv/clog venv
+	rm -rf "$(VENV)"
 
 venv: FORCE
-	python3 -m venv ~/.venv/clog
-	echo . ~/.venv/clog/bin/activate > venv
-	. ./venv && pip3 install -U build twine
-	. ./venv && pip3 install pylint pycodestyle pydocstyle pyflakes isort
+	python3 -m venv "$(VENV)"
+	"$(BIN)/pip3" install pylint pycodestyle pydocstyle pyflakes isort
 
 lint:
-	. ./venv && ! isort --quiet --diff . | grep .
-	. ./venv && pycodestyle .
-	. ./venv && pyflakes .
-	. ./venv && pylint -d R0903,R0913,R0914,W0718 clog
+	! "$(BIN)/isort" --quiet --diff . | grep .
+	"$(BIN)/pycodestyle" .
+	"$(BIN)/pyflakes" .
+	"$(BIN)/pylint" -d R0903,R0913,R0914,W0718 clog.py
 
 test:
 	python3 -m unittest -v
 
 coverage:
-	. ./venv && coverage run --branch -m unittest -v
-	. ./venv && coverage report --show-missing
-	. ./venv && coverage html
+	"$(BIN)/coverage" run --branch -m unittest -v
+	"$(BIN)/coverage" report --show-missing
+	"$(BIN)/coverage" html
 
 check-password:
 	! grep -r '"password":' . | grep -vE '^\./[^/]*.json|Makefile|\.\.\.'
@@ -57,6 +58,9 @@ pull:
 	du -sh /tmp/clog.tgz clog/
 
 cat:
+	cat clog/*.txt
+
+cmsg:
 	cat clog/*.txt | wc -l
 	sed -n 's/\(.\{19\}\) \(.*\) PRIVMSG \(.*\) :\(.*\)/\1 \3 <\2> \4/p' clog/*.txt
 
