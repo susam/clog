@@ -68,10 +68,15 @@ def _run(host, port, tls, nick, password, channels, file_prefix, max_files):
     _log.info('Receiving messages ...')
     for line in _recv(sock):
         if line is not None:
-            sender, command, middle, trailing = _parse_line(line)
+            prefix, sender, command, middle, trailing = _parse_line(line)
             if command == 'PING':
                 _send(sock, f'PONG :{trailing}')
-            elif command in ['JOIN', 'PART', 'QUIT', 'PRIVMSG']:
+            elif command in ['JOIN', 'PART', 'QUIT']:
+                text = f'{sender} [{prefix}] {command} {middle}'
+                if trailing is not None:
+                    text = f'{text} :{trailing}'
+                _fwrite(file_prefix, text)
+            elif command in ['PRIVMSG']:
                 _log.info(
                     '>> sender: %s; command: %s; middle: %s; trailing: %s',
                     sender, command, middle, trailing)
@@ -86,14 +91,14 @@ def _run(host, port, tls, nick, password, channels, file_prefix, max_files):
 def _fwrite(file_prefix, text):
     """Write content to file and close the file."""
     current_time = datetime.datetime.now(datetime.timezone.utc)
-    date = current_time.strftime('%Y-%m-%d')
-    time = current_time.strftime('%H:%M:%S')
-    filename = f'{file_prefix}-{date}.txt'
+    fdate = current_time.strftime('%Y-%m-%d')
+    ftime = current_time.strftime('%H:%M:%S')
+    filename = f'{file_prefix}-{fdate}.txt'
     basedir = os.path.dirname(filename)
     if not os.path.isdir(basedir):
         os.makedirs(basedir)
     with open(filename, 'a', encoding='utf-8') as stream:
-        stream.write(f'{date} {time} {text}\n')
+        stream.write(f'{fdate} {ftime} {text}\n')
 
 
 def _upkeep(file_prefix, max_files):
@@ -178,7 +183,7 @@ def _parse_line(line):
         if len(params) == 2:
             trailing = params[1].strip()
 
-    return sender, command, middle, trailing
+    return prefix, sender, command, middle, trailing
 
 
 if __name__ == '__main__':
