@@ -62,7 +62,7 @@ cat:
 
 cmsg:
 	cat clog/*.txt | wc -l
-	sed -n 's/\(.\{19\}\) \(.*\) PRIVMSG \(.*\) :\(.*\)/\1 \3 <\2> \4/p' clog/*.txt
+	sed -n 's/\(.\{19\}\) \(.*\) PRIVMSG \([^ ]*\) :\(.*\)/\1 \3 <\2> \4/p' clog/*.txt
 
 
 # Deployment Targets
