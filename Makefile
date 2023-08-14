@@ -69,9 +69,9 @@ cmsg:
 # ------------------
 
 service: rmservice
-	mkdir -p /opt/data/
+	mkdir -p /opt/data/clog/
 	adduser --system --group --home / clog
-	chown -R clog:clog . /opt/data/
+	chown -R clog:clog . /opt/data/clog/
 	chmod 600 clog.json
 	systemctl enable "$$PWD/etc/clog.service"
 	systemctl daemon-reload
