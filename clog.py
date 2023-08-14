@@ -82,7 +82,7 @@ def _run(host, port, tls, nick, password, channels, file_prefix, max_files):
                     sender, command, middle, trailing)
                 text = f'{sender} {command} {middle} :{trailing}'
                 _fwrite(file_prefix, text)
-            _ctx.retry_delay = 1
+                _ctx.retry_delay = 1
         if time.time() - _ctx.last_upkeep_time >= 3600:
             _upkeep(file_prefix, max_files)
             _ctx.last_upkeep_time = int(time.time())
